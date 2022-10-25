@@ -1,0 +1,2 @@
+1) Os testes de unidade são rápidos e simples, enquanto os testes de funcionalidade são mais lentos e complexos.
+2) Por isso, testes de unidade são executados com mais frequência durante o desenvolvimento, enquanto os testes de funcionalidade são executados com frequência menor.

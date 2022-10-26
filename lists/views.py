@@ -12,3 +12,7 @@ def home_page(request):
         return redirect('/lists/the-only-list-in-the-world/')
 
     return render(request, 'home.html')
+
+def new_list(request):
+    Item.objects.create(text=request.POST['item_text'])
+    return redirect('/lists/the-only-list-in-the-world/')

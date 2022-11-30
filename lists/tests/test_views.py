@@ -1,5 +1,6 @@
 from django.test import TestCase
 from lists.models import Item, List
+from django.utils.html import escape
 
 class HomePageTest(TestCase):
     def test_uses_home_template(self):
@@ -34,7 +35,6 @@ class ListViewTest(TestCase):
         self.assertEqual(response.context['list'], correct_list)
 
 class NewListTest(TestCase):
-
     def test_can_save_a_POST_request(self):
         self.client.post('/lists/new', data={'item_text': 'A new list item'})
         self.assertEqual(Item.objects.count(), 1)
@@ -45,7 +45,13 @@ class NewListTest(TestCase):
         response = self.client.post('/lists/new', data={'item_text': 'A new list item'})
         new_list = List.objects.first()
         self.assertRedirects(response, f'/lists/{new_list.id}/')
-
+    def test_validation_errors_are_sent_back_to_home_page_template(self):
+        response = self.client.post('/lists/new', data={'item_text': ''})
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'home.html')
+        expected_error = escape("You can't have an empty list item")
+        self.assertContains(response, expected_error)
+    
 class NewItemTest(TestCase):
 
     def test_can_save_a_POST_request_to_an_existing_list(self):
